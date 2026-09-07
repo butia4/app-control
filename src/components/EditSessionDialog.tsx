@@ -94,7 +94,8 @@ export function EditSessionDialog({
               id="duration-input"
               type="number"
               min={0}
-              inputMode="numeric"
+              step="any"
+              inputMode="decimal"
               aria-invalid={Boolean(durationError)}
               value={durationInput}
               onChange={(event) => setDurationInput(event.target.value)}

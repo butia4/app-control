@@ -23,6 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 
+.agents
 .atl
 .claude
 CLAUDE.md
+skills-lock.json

@@ -82,6 +82,18 @@ export function EditSessionDialog({
           onSubmit={handleSubmit}
           className="flex flex-col gap-4"
         >
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium" htmlFor="edit-attempt-number">
+              N° de intento
+            </label>
+            <Input
+              id="edit-attempt-number"
+              value={session.attemptNumber}
+              readOnly
+              disabled
+            />
+          </div>
+
           <ChallengePicker value={challengeId} onChange={setChallengeId} />
           <ModalityPicker value={modality} onChange={setModality} />
           <AgeInput value={ageInput} onChange={setAgeInput} error={ageError} />

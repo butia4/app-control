@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { Toaster } from "@/components/ui/sonner"
 import { CaptureScreen } from "@/components/CaptureScreen"
 import { ReportsScreen } from "@/components/ReportsScreen"
 
@@ -36,6 +37,7 @@ function App() {
       </nav>
 
       {view === "capture" ? <CaptureScreen /> : <ReportsScreen />}
+      <Toaster />
     </div>
   )
 }

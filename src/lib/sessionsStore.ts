@@ -46,3 +46,21 @@ export function append(record: SessionRecord): void {
   envelope.sessions.push(record)
   writeEnvelope(envelope)
 }
+
+export function update(id: string, patch: Partial<SessionRecord>): void {
+  const envelope = readEnvelope()
+  const index = envelope.sessions.findIndex((session) => session.id === id)
+  if (index === -1) return
+
+  envelope.sessions[index] = { ...envelope.sessions[index], ...patch }
+  writeEnvelope(envelope)
+}
+
+export function remove(id: string): void {
+  const envelope = readEnvelope()
+  const index = envelope.sessions.findIndex((session) => session.id === id)
+  if (index === -1) return
+
+  envelope.sessions.splice(index, 1)
+  writeEnvelope(envelope)
+}

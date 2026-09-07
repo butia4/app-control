@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { toast } from "sonner"
 import {
   Dialog,
   DialogContent,
@@ -64,6 +65,7 @@ export function EditSessionDialog({
       durationMs: parsedDuration,
       resuelto: parsedDuration <= challenge.thresholdMs,
     })
+    toast.success(`Intento N.° ${session.attemptNumber} actualizado`)
     onOpenChange(false)
   }
 

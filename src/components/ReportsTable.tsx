@@ -52,7 +52,7 @@ export function ReportsTable({
   const handleConfirmDelete = () => {
     if (!deletingSession) return
     onDeleteSession(deletingSession.id)
-    toast.success("Sesión eliminada")
+    toast.success(`Intento N.° ${deletingSession.attemptNumber} eliminado`)
     setDeletingSession(null)
   }
 

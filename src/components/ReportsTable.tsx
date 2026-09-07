@@ -1,3 +1,5 @@
+import { useState } from "react"
+import { toast } from "sonner"
 import {
   Table,
   TableBody,
@@ -7,11 +9,25 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { EditSessionDialog } from "@/components/EditSessionDialog"
 import { challenges } from "@/data/challenges"
 import type { SessionRecord } from "@/types/session"
 
 interface ReportsTableProps {
   sessions: SessionRecord[]
+  onUpdateSession: (id: string, patch: Partial<SessionRecord>) => void
+  onDeleteSession: (id: string) => void
 }
 
 function challengeName(challengeId: string): string {
@@ -21,7 +37,25 @@ function challengeName(challengeId: string): string {
   )
 }
 
-export function ReportsTable({ sessions }: ReportsTableProps) {
+export function ReportsTable({
+  sessions,
+  onUpdateSession,
+  onDeleteSession,
+}: ReportsTableProps) {
+  const [editingSession, setEditingSession] = useState<SessionRecord | null>(
+    null
+  )
+  const [deletingSession, setDeletingSession] = useState<SessionRecord | null>(
+    null
+  )
+
+  const handleConfirmDelete = () => {
+    if (!deletingSession) return
+    onDeleteSession(deletingSession.id)
+    toast.success("Sesión eliminada")
+    setDeletingSession(null)
+  }
+
   if (sessions.length === 0) {
     return (
       <Table>
@@ -33,11 +67,14 @@ export function ReportsTable({ sessions }: ReportsTableProps) {
             <TableHead>Duración (ms)</TableHead>
             <TableHead>Resuelto</TableHead>
             <TableHead>Fecha</TableHead>
+            <TableHead>
+              <span className="sr-only">Acciones</span>
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           <TableRow>
-            <TableCell colSpan={6} className="text-center text-muted-foreground">
+            <TableCell colSpan={7} className="text-center text-muted-foreground">
               No hay sesiones registradas todavía.
             </TableCell>
           </TableRow>
@@ -57,6 +94,9 @@ export function ReportsTable({ sessions }: ReportsTableProps) {
             <TableHead>Duración (ms)</TableHead>
             <TableHead>Resuelto</TableHead>
             <TableHead>Fecha</TableHead>
+            <TableHead>
+              <span className="sr-only">Acciones</span>
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -69,6 +109,26 @@ export function ReportsTable({ sessions }: ReportsTableProps) {
               <TableCell>{session.resuelto ? "Sí" : "No"}</TableCell>
               <TableCell>
                 {new Date(session.timestamp).toLocaleString()}
+              </TableCell>
+              <TableCell>
+                <div className="flex justify-end gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setEditingSession(session)}
+                  >
+                    Editar
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setDeletingSession(session)}
+                  >
+                    Eliminar
+                  </Button>
+                </div>
               </TableCell>
             </TableRow>
           ))}
@@ -99,10 +159,63 @@ export function ReportsTable({ sessions }: ReportsTableProps) {
               <span className="text-sm text-muted-foreground">
                 Fecha: {new Date(session.timestamp).toLocaleString()}
               </span>
+              <div className="flex justify-end gap-2 pt-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setEditingSession(session)}
+                >
+                  Editar
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setDeletingSession(session)}
+                >
+                  Eliminar
+                </Button>
+              </div>
             </CardContent>
           </Card>
         ))}
       </div>
+
+      {editingSession && (
+        <EditSessionDialog
+          key={editingSession.id}
+          session={editingSession}
+          open={editingSession !== null}
+          onOpenChange={(open) => {
+            if (!open) setEditingSession(null)
+          }}
+          onSave={onUpdateSession}
+        />
+      )}
+
+      <AlertDialog
+        open={deletingSession !== null}
+        onOpenChange={(open) => {
+          if (!open) setDeletingSession(null)
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Eliminar intento</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta acción no se puede deshacer. El intento se eliminará
+              permanentemente.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmDelete}>
+              Eliminar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   )
 }

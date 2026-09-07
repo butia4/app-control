@@ -1,12 +1,10 @@
-import { useState } from "react"
 import { ReportsTable } from "@/components/ReportsTable"
 import { CsvExportButton } from "@/components/CsvExportButton"
-import { getAll } from "@/lib/sessionsStore"
+import { useSessions } from "@/hooks/useSessions"
 import { Card, CardContent } from "@/components/ui/card"
-import type { SessionRecord } from "@/types/session"
 
 export function ReportsScreen() {
-  const [sessions] = useState<SessionRecord[]>(() => getAll())
+  const { sessions, updateSession, deleteSession } = useSessions()
 
   return (
     <div className="mx-auto max-w-3xl p-6">
@@ -16,7 +14,11 @@ export function ReportsScreen() {
             <h1 className="text-2xl font-bold tracking-tight">Reportes</h1>
             <CsvExportButton sessions={sessions} />
           </div>
-          <ReportsTable sessions={sessions} />
+          <ReportsTable
+            sessions={sessions}
+            onUpdateSession={updateSession}
+            onDeleteSession={deleteSession}
+          />
         </CardContent>
       </Card>
     </div>

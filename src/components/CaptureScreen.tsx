@@ -18,6 +18,8 @@ export function CaptureScreen() {
   const [savedMessage, setSavedMessage] = useState<string | null>(null)
 
   const { nextAttemptNumber, addSession } = useSessions()
+  const [displayAttemptNumber, setDisplayAttemptNumber] =
+    useState(nextAttemptNumber)
   const stopwatch = useStopwatch()
   const isLocked = stopwatch.status !== "idle"
 
@@ -64,6 +66,7 @@ export function CaptureScreen() {
     setAgeInput("")
     setAgeError(undefined)
     stopwatch.reset()
+    setDisplayAttemptNumber(nextAttemptNumber)
   }
 
   return (
@@ -80,7 +83,7 @@ export function CaptureScreen() {
             </label>
             <Input
               id="attempt-number"
-              value={nextAttemptNumber}
+              value={displayAttemptNumber}
               readOnly
               disabled
             />

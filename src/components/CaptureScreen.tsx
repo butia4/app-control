@@ -17,6 +17,7 @@ export function CaptureScreen() {
   const [savedMessage, setSavedMessage] = useState<string | null>(null)
 
   const stopwatch = useStopwatch()
+  const isLocked = stopwatch.status !== "idle"
 
   const parsedAge = ageInput.trim() === "" ? NaN : Number(ageInput)
   const hasValidAge = Number.isFinite(parsedAge) && parsedAge >= 0
@@ -57,6 +58,15 @@ export function CaptureScreen() {
     )
   }
 
+  const handleReset = () => {
+    setSavedMessage(null)
+    setChallengeId(null)
+    setModality(null)
+    setAgeInput("")
+    setAgeError(undefined)
+    stopwatch.reset()
+  }
+
   return (
     <div className="mx-auto max-w-md p-6">
       <Card>
@@ -65,15 +75,29 @@ export function CaptureScreen() {
             Captura de intento
           </h1>
 
-          <ChallengePicker value={challengeId} onChange={setChallengeId} />
-          <ModalityPicker value={modality} onChange={setModality} />
-          <AgeInput value={ageInput} onChange={setAgeInput} error={ageError} />
+          <ChallengePicker
+            value={challengeId}
+            onChange={setChallengeId}
+            disabled={isLocked}
+          />
+          <ModalityPicker
+            value={modality}
+            onChange={setModality}
+            disabled={isLocked}
+          />
+          <AgeInput
+            value={ageInput}
+            onChange={setAgeInput}
+            error={ageError}
+            disabled={isLocked}
+          />
 
           <StopwatchControls
             stopwatch={stopwatch}
             canStart={canStart}
             onStart={handleStart}
             onFinalize={handleFinalize}
+            onReset={handleReset}
           />
 
           {savedMessage && (

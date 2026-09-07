@@ -6,6 +6,7 @@ interface StopwatchControlsProps {
   canStart: boolean
   onStart: () => void
   onFinalize: () => void
+  onReset: () => void
 }
 
 function formatElapsed(ms: number): string {
@@ -22,6 +23,7 @@ export function StopwatchControls({
   canStart,
   onStart,
   onFinalize,
+  onReset,
 }: StopwatchControlsProps) {
   const { status, elapsedMs, pause, resume } = stopwatch
 
@@ -57,9 +59,14 @@ export function StopwatchControls({
           </>
         )}
         {status === "finished" && (
-          <Button type="button" disabled>
-            Terminar
-          </Button>
+          <>
+            <Button type="button" disabled>
+              Terminar
+            </Button>
+            <Button type="button" variant="outline" onClick={onReset}>
+              Nuevo intento
+            </Button>
+          </>
         )}
       </div>
     </div>

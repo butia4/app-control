@@ -4,9 +4,10 @@ interface AgeInputProps {
   value: string
   onChange: (value: string) => void
   error?: string
+  disabled?: boolean
 }
 
-export function AgeInput({ value, onChange, error }: AgeInputProps) {
+export function AgeInput({ value, onChange, error, disabled }: AgeInputProps) {
   return (
     <div className="flex flex-col gap-1.5">
       <label className="text-sm font-medium" htmlFor="age-input">
@@ -18,6 +19,7 @@ export function AgeInput({ value, onChange, error }: AgeInputProps) {
         min={0}
         inputMode="numeric"
         aria-invalid={Boolean(error)}
+        disabled={disabled}
         value={value}
         onChange={(event) => onChange(event.target.value)}
       />

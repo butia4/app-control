@@ -9,6 +9,7 @@ export interface StopwatchApi {
   pause: () => void
   resume: () => void
   finalize: () => { durationMs: number }
+  reset: () => void
 }
 
 const TICK_INTERVAL_MS = 100
@@ -81,5 +82,13 @@ export function useStopwatch(): StopwatchApi {
     return { durationMs }
   }, [clearTick, currentElapsed])
 
-  return { elapsedMs, status, start, pause, resume, finalize }
+  const reset = useCallback(() => {
+    accumulatedMsRef.current = 0
+    runStartRef.current = null
+    clearTick()
+    setElapsedMs(0)
+    setStatus("idle")
+  }, [clearTick])
+
+  return { elapsedMs, status, start, pause, resume, finalize, reset }
 }

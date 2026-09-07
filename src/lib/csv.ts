@@ -1,6 +1,7 @@
 import type { SessionRecord } from "@/types/session"
 
 const CSV_HEADERS = [
+  "attemptNumber",
   "challengeId",
   "modality",
   "ageAtSession",

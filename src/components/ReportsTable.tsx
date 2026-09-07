@@ -61,6 +61,7 @@ export function ReportsTable({
       <Table>
         <TableHeader>
           <TableRow>
+            <TableHead>#</TableHead>
             <TableHead>Desafío</TableHead>
             <TableHead>Modalidad</TableHead>
             <TableHead>Edad</TableHead>
@@ -74,7 +75,7 @@ export function ReportsTable({
         </TableHeader>
         <TableBody>
           <TableRow>
-            <TableCell colSpan={7} className="text-center text-muted-foreground">
+            <TableCell colSpan={8} className="text-center text-muted-foreground">
               No hay sesiones registradas todavía.
             </TableCell>
           </TableRow>
@@ -88,6 +89,7 @@ export function ReportsTable({
       <Table className="hidden md:table">
         <TableHeader>
           <TableRow>
+            <TableHead>#</TableHead>
             <TableHead>Desafío</TableHead>
             <TableHead>Modalidad</TableHead>
             <TableHead>Edad</TableHead>
@@ -102,6 +104,7 @@ export function ReportsTable({
         <TableBody>
           {sessions.map((session) => (
             <TableRow key={session.id}>
+              <TableCell>{session.attemptNumber}</TableCell>
               <TableCell>{challengeName(session.challengeId)}</TableCell>
               <TableCell>{session.modality}</TableCell>
               <TableCell>{session.ageAtSession}</TableCell>
@@ -141,7 +144,7 @@ export function ReportsTable({
             <CardContent className="flex flex-col gap-1 p-4">
               <div className="flex items-center justify-between">
                 <span className="font-medium">
-                  {challengeName(session.challengeId)}
+                  #{session.attemptNumber} · {challengeName(session.challengeId)}
                 </span>
                 <span className="text-sm text-muted-foreground">
                   {session.modality}

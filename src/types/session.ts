@@ -2,6 +2,7 @@ export type Modality = "imperativo" | "evento"
 
 export interface SessionRecord {
   id: string
+  attemptNumber: number
   challengeId: string
   modality: Modality
   ageAtSession: number

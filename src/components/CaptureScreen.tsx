@@ -4,10 +4,11 @@ import { ModalityPicker } from "@/components/ModalityPicker"
 import { AgeInput } from "@/components/AgeInput"
 import { StopwatchControls } from "@/components/StopwatchControls"
 import { useStopwatch } from "@/hooks/useStopwatch"
+import { useSessions } from "@/hooks/useSessions"
 import { challenges } from "@/data/challenges"
-import { append } from "@/lib/sessionsStore"
 import { Card, CardContent } from "@/components/ui/card"
-import type { Modality, SessionRecord } from "@/types/session"
+import { Input } from "@/components/ui/input"
+import type { Modality } from "@/types/session"
 
 export function CaptureScreen() {
   const [challengeId, setChallengeId] = useState<string | null>(null)
@@ -16,6 +17,7 @@ export function CaptureScreen() {
   const [ageError, setAgeError] = useState<string | undefined>(undefined)
   const [savedMessage, setSavedMessage] = useState<string | null>(null)
 
+  const { nextAttemptNumber, addSession } = useSessions()
   const stopwatch = useStopwatch()
   const isLocked = stopwatch.status !== "idle"
 
@@ -42,17 +44,14 @@ export function CaptureScreen() {
     const { durationMs } = stopwatch.finalize()
     const resuelto = durationMs <= challenge.thresholdMs
 
-    const record: SessionRecord = {
-      id: crypto.randomUUID(),
+    addSession({
       challengeId,
       modality,
       ageAtSession: parsedAge,
       durationMs,
       resuelto,
       timestamp: new Date().toISOString(),
-    }
-
-    append(record)
+    })
     setSavedMessage(
       `Sesión guardada: ${resuelto ? "resuelto" : "no resuelto"}.`
     )
@@ -74,6 +73,18 @@ export function CaptureScreen() {
           <h1 className="text-2xl font-bold tracking-tight">
             Captura de intento
           </h1>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium" htmlFor="attempt-number">
+              N° de intento
+            </label>
+            <Input
+              id="attempt-number"
+              value={nextAttemptNumber}
+              readOnly
+              disabled
+            />
+          </div>
 
           <ChallengePicker
             value={challengeId}

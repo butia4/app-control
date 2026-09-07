@@ -27,7 +27,7 @@ export function StopwatchControls({
 
   return (
     <div className="flex flex-col gap-2">
-      <span className="font-mono text-2xl tabular-nums">
+      <span className="font-mono text-5xl tabular-nums">
         {formatElapsed(elapsedMs)}
       </span>
       <div className="flex gap-2">

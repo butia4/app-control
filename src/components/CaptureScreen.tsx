@@ -6,6 +6,7 @@ import { StopwatchControls } from "@/components/StopwatchControls"
 import { useStopwatch } from "@/hooks/useStopwatch"
 import { challenges } from "@/data/challenges"
 import { append } from "@/lib/sessionsStore"
+import { Card, CardContent } from "@/components/ui/card"
 import type { Modality, SessionRecord } from "@/types/session"
 
 export function CaptureScreen() {
@@ -57,23 +58,29 @@ export function CaptureScreen() {
   }
 
   return (
-    <div className="mx-auto flex max-w-md flex-col gap-6 p-6">
-      <h1 className="text-xl font-semibold">Captura de intento</h1>
+    <div className="mx-auto max-w-md p-6">
+      <Card>
+        <CardContent className="flex flex-col gap-6 p-6">
+          <h1 className="text-2xl font-bold tracking-tight">
+            Captura de intento
+          </h1>
 
-      <ChallengePicker value={challengeId} onChange={setChallengeId} />
-      <ModalityPicker value={modality} onChange={setModality} />
-      <AgeInput value={ageInput} onChange={setAgeInput} error={ageError} />
+          <ChallengePicker value={challengeId} onChange={setChallengeId} />
+          <ModalityPicker value={modality} onChange={setModality} />
+          <AgeInput value={ageInput} onChange={setAgeInput} error={ageError} />
 
-      <StopwatchControls
-        stopwatch={stopwatch}
-        canStart={canStart}
-        onStart={handleStart}
-        onFinalize={handleFinalize}
-      />
+          <StopwatchControls
+            stopwatch={stopwatch}
+            canStart={canStart}
+            onStart={handleStart}
+            onFinalize={handleFinalize}
+          />
 
-      {savedMessage && (
-        <p className="text-sm text-muted-foreground">{savedMessage}</p>
-      )}
+          {savedMessage && (
+            <p className="text-sm text-muted-foreground">{savedMessage}</p>
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }

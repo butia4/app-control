@@ -9,7 +9,8 @@ interface CsvExportButtonProps {
 export function CsvExportButton({ sessions }: CsvExportButtonProps) {
   const handleExport = () => {
     const csv = sessionsToCsv(sessions)
-    downloadCsv("sessions.csv", csv)
+    const today = new Date().toISOString().slice(0, 10)
+    downloadCsv(`butia-intentos_${today}.csv`, csv)
   }
 
   return (

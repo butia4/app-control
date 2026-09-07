@@ -7,6 +7,7 @@ interface StopwatchControlsProps {
   onStart: () => void
   onFinalize: () => void
   onReset: () => void
+  thresholdMs: number | null
 }
 
 function formatElapsed(ms: number): string {
@@ -24,14 +25,38 @@ export function StopwatchControls({
   onStart,
   onFinalize,
   onReset,
+  thresholdMs,
 }: StopwatchControlsProps) {
   const { status, elapsedMs, pause, resume } = stopwatch
+  const isOvertime = thresholdMs != null && elapsedMs > thresholdMs
 
   return (
     <div className="flex flex-col gap-2">
-      <span className="font-mono text-5xl tabular-nums">
+      <span
+        className={`font-mono text-5xl tabular-nums ${
+          isOvertime ? "text-destructive" : ""
+        }`}
+      >
         {formatElapsed(elapsedMs)}
       </span>
+      {(status === "running" || status === "paused") &&
+        thresholdMs != null && (
+          <div className="flex flex-col gap-1">
+            <span className="text-sm text-muted-foreground">
+              Tiempo máximo: {formatElapsed(thresholdMs)}
+            </span>
+            <div className="h-2 w-full rounded-full bg-muted">
+              <div
+                className={`h-2 rounded-full ${
+                  isOvertime ? "bg-destructive" : "bg-primary"
+                }`}
+                style={{
+                  width: `${Math.min(elapsedMs / thresholdMs, 1) * 100}%`,
+                }}
+              />
+            </div>
+          </div>
+        )}
       <div className="flex gap-2">
         {status === "idle" && (
           <Button type="button" disabled={!canStart} onClick={onStart}>

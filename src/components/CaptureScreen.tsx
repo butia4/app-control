@@ -28,6 +28,8 @@ export function CaptureScreen() {
   const canStart =
     challengeId !== null && modality !== null && hasValidAge
 
+  const challenge = challenges.find((item) => item.id === challengeId)
+
   const handleStart = () => {
     if (!hasValidAge) {
       setAgeError("La edad es obligatoria y debe ser numérica.")
@@ -40,7 +42,6 @@ export function CaptureScreen() {
   const handleFinalize = () => {
     if (!challengeId || modality === null || !hasValidAge) return
 
-    const challenge = challenges.find((item) => item.id === challengeId)
     if (!challenge) return
 
     const { durationMs } = stopwatch.finalize()
@@ -112,6 +113,7 @@ export function CaptureScreen() {
             onStart={handleStart}
             onFinalize={handleFinalize}
             onReset={handleReset}
+            thresholdMs={challenge?.thresholdMs ?? null}
           />
 
           {savedMessage && (

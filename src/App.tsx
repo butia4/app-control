@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button"
 import { Toaster } from "@/components/ui/sonner"
 import { CaptureScreen } from "@/components/CaptureScreen"
 import { ReportsScreen } from "@/components/ReportsScreen"
+import { ConfigScreen } from "@/components/ConfigScreen"
 
-type View = "capture" | "reports"
+type View = "capture" | "reports" | "config"
 
 function App() {
   const [view, setView] = useState<View>("capture")
@@ -34,9 +35,22 @@ function App() {
         >
           Reportes
         </Button>
+        <Button
+          type="button"
+          variant={view === "config" ? "default" : "outline"}
+          aria-pressed={view === "config"}
+          className={
+            view === "config" ? "ring-2 ring-ring/50" : undefined
+          }
+          onClick={() => setView("config")}
+        >
+          Config
+        </Button>
       </nav>
 
-      {view === "capture" ? <CaptureScreen /> : <ReportsScreen />}
+      {view === "capture" && <CaptureScreen />}
+      {view === "reports" && <ReportsScreen />}
+      {view === "config" && <ConfigScreen />}
       <Toaster />
     </div>
   )

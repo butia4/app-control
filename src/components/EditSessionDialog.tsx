@@ -96,7 +96,11 @@ export function EditSessionDialog({
             />
           </div>
 
-          <ChallengePicker value={challengeId} onChange={setChallengeId} />
+          <ChallengePicker
+            challenges={challenges}
+            value={challengeId}
+            onChange={setChallengeId}
+          />
           <ModalityPicker value={modality} onChange={setModality} />
           <AgeInput value={ageInput} onChange={setAgeInput} error={ageError} />
 

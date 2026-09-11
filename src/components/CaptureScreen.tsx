@@ -5,7 +5,7 @@ import { AgeInput } from "@/components/AgeInput"
 import { StopwatchControls } from "@/components/StopwatchControls"
 import { useStopwatch } from "@/hooks/useStopwatch"
 import { useSessions } from "@/hooks/useSessions"
-import { challenges } from "@/data/challenges"
+import { useChallenges } from "@/hooks/useChallenges"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import type { Modality } from "@/types/session"
@@ -18,6 +18,7 @@ export function CaptureScreen() {
   const [savedMessage, setSavedMessage] = useState<string | null>(null)
 
   const { nextAttemptNumber, addSession } = useSessions()
+  const { challenges } = useChallenges()
   const [displayAttemptNumber, setDisplayAttemptNumber] =
     useState(nextAttemptNumber)
   const stopwatch = useStopwatch()
@@ -91,6 +92,7 @@ export function CaptureScreen() {
           </div>
 
           <ChallengePicker
+            challenges={challenges}
             value={challengeId}
             onChange={setChallengeId}
             disabled={isLocked}

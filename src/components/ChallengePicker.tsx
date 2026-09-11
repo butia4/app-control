@@ -1,13 +1,15 @@
-import { challenges } from "@/data/challenges"
+import type { Challenge } from "@/data/challenges"
 import { Button } from "@/components/ui/button"
 
 interface ChallengePickerProps {
+  challenges: Challenge[]
   value: string | null
   onChange: (challengeId: string) => void
   disabled?: boolean
 }
 
 export function ChallengePicker({
+  challenges,
   value,
   onChange,
   disabled,

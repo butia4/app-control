@@ -8,6 +8,8 @@ const CSV_HEADERS = [
   "durationMs",
   "resuelto",
   "timestamp",
+  "priorRoboticsExperience",
+  "blockConfusion",
 ] as const
 
 function escapeCsvField(value: string): string {

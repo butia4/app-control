@@ -11,7 +11,7 @@ import type { SessionRecord } from "@/types/session"
 export interface UseSessionsApi {
   sessions: SessionRecord[]
   nextAttemptNumber: number
-  addSession: (input: Omit<SessionRecord, "id" | "attemptNumber">) => void
+  addSession: (input: Omit<SessionRecord, "id" | "attemptNumber">) => SessionRecord
   updateSession: (id: string, patch: Partial<SessionRecord>) => void
   deleteSession: (id: string) => void
 }
@@ -21,8 +21,9 @@ export function useSessions(): UseSessionsApi {
 
   const addSession = useCallback(
     (input: Omit<SessionRecord, "id" | "attemptNumber">) => {
-      append(input)
+      const record = append(input)
       setSessions(getAll())
+      return record
     },
     []
   )

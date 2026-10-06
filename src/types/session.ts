@@ -9,4 +9,6 @@ export interface SessionRecord {
   durationMs: number
   resuelto: boolean
   timestamp: string
+  priorRoboticsExperience: boolean
+  blockConfusion: boolean
 }

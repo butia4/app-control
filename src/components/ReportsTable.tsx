@@ -68,6 +68,8 @@ export function ReportsTable({
             <TableHead>Duración (ms)</TableHead>
             <TableHead>Resuelto</TableHead>
             <TableHead>Fecha</TableHead>
+            <TableHead>Exp. robótica</TableHead>
+            <TableHead>Confusión bloques</TableHead>
             <TableHead>
               <span className="sr-only">Acciones</span>
             </TableHead>
@@ -75,7 +77,7 @@ export function ReportsTable({
         </TableHeader>
         <TableBody>
           <TableRow>
-            <TableCell colSpan={8} className="text-center text-muted-foreground">
+            <TableCell colSpan={10} className="text-center text-muted-foreground">
               No hay sesiones registradas todavía.
             </TableCell>
           </TableRow>
@@ -96,6 +98,8 @@ export function ReportsTable({
             <TableHead>Duración (ms)</TableHead>
             <TableHead>Resuelto</TableHead>
             <TableHead>Fecha</TableHead>
+            <TableHead>Exp. robótica</TableHead>
+            <TableHead>Confusión bloques</TableHead>
             <TableHead>
               <span className="sr-only">Acciones</span>
             </TableHead>
@@ -113,6 +117,10 @@ export function ReportsTable({
               <TableCell>
                 {new Date(session.timestamp).toLocaleString()}
               </TableCell>
+              <TableCell>
+                {session.priorRoboticsExperience ? "Sí" : "No"}
+              </TableCell>
+              <TableCell>{session.blockConfusion ? "Sí" : "No"}</TableCell>
               <TableCell>
                 <div className="flex justify-end gap-2">
                   <Button
@@ -161,6 +169,14 @@ export function ReportsTable({
               </span>
               <span className="text-sm text-muted-foreground">
                 Fecha: {new Date(session.timestamp).toLocaleString()}
+              </span>
+              <span className="text-sm text-muted-foreground">
+                Experiencia previa en robótica:{" "}
+                {session.priorRoboticsExperience ? "Sí" : "No"}
+              </span>
+              <span className="text-sm text-muted-foreground">
+                Confusión en el uso de bloques:{" "}
+                {session.blockConfusion ? "Sí" : "No"}
               </span>
               <div className="flex justify-end gap-2 pt-2">
                 <Button

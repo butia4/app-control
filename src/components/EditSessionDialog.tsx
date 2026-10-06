@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input"
 import { ChallengePicker } from "@/components/ChallengePicker"
 import { ModalityPicker } from "@/components/ModalityPicker"
 import { AgeInput } from "@/components/AgeInput"
+import { ObservationCheckbox } from "@/components/ObservationCheckbox"
 import { challenges } from "@/data/challenges"
 import type { Modality, SessionRecord } from "@/types/session"
 
@@ -35,6 +36,11 @@ export function EditSessionDialog({
   const [durationInput, setDurationInput] = useState(
     String(session.durationMs)
   )
+
+  const [priorRoboticsExperience, setPriorRoboticsExperience] = useState(
+    session.priorRoboticsExperience
+  )
+  const [blockConfusion, setBlockConfusion] = useState(session.blockConfusion)
 
   const parsedAge = ageInput.trim() === "" ? NaN : Number(ageInput)
   const hasValidAge = Number.isFinite(parsedAge) && parsedAge >= 0
@@ -64,6 +70,8 @@ export function EditSessionDialog({
       ageAtSession: parsedAge,
       durationMs: parsedDuration,
       resuelto: parsedDuration <= challenge.thresholdMs,
+      priorRoboticsExperience,
+      blockConfusion,
     })
     toast.success(`Intento N.° ${session.attemptNumber} actualizado`)
     onOpenChange(false)
@@ -122,6 +130,19 @@ export function EditSessionDialog({
               <p className="text-sm text-destructive">{durationError}</p>
             )}
           </div>
+
+          <ObservationCheckbox
+            id="edit-prior-robotics-experience"
+            label="Experiencia previa en robótica"
+            checked={priorRoboticsExperience}
+            onCheckedChange={setPriorRoboticsExperience}
+          />
+          <ObservationCheckbox
+            id="edit-block-confusion"
+            label="Confusión en el uso de bloques"
+            checked={blockConfusion}
+            onCheckedChange={setBlockConfusion}
+          />
         </form>
 
         <DialogFooter>

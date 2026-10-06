@@ -2,6 +2,7 @@ import { useState } from "react"
 import { ChallengePicker } from "@/components/ChallengePicker"
 import { ModalityPicker } from "@/components/ModalityPicker"
 import { AgeInput } from "@/components/AgeInput"
+import { ObservationCheckbox } from "@/components/ObservationCheckbox"
 import { StopwatchControls } from "@/components/StopwatchControls"
 import { useStopwatch } from "@/hooks/useStopwatch"
 import { useSessions } from "@/hooks/useSessions"
@@ -16,8 +17,10 @@ export function CaptureScreen() {
   const [ageInput, setAgeInput] = useState("")
   const [ageError, setAgeError] = useState<string | undefined>(undefined)
   const [savedMessage, setSavedMessage] = useState<string | null>(null)
+  const [priorRoboticsExperience, setPriorRoboticsExperience] = useState(false)
+  const [savedSessionId, setSavedSessionId] = useState<string | null>(null)
 
-  const { nextAttemptNumber, addSession } = useSessions()
+  const { sessions, nextAttemptNumber, addSession, updateSession } = useSessions()
   const { challenges } = useChallenges()
   const [displayAttemptNumber, setDisplayAttemptNumber] =
     useState(nextAttemptNumber)
@@ -30,6 +33,10 @@ export function CaptureScreen() {
     challengeId !== null && modality !== null && hasValidAge
 
   const challenge = challenges.find((item) => item.id === challengeId)
+
+  const blockConfusion =
+    sessions.find((session) => session.id === savedSessionId)
+      ?.blockConfusion ?? false
 
   const handleStart = () => {
     if (!hasValidAge) {
@@ -48,14 +55,17 @@ export function CaptureScreen() {
     const { durationMs } = stopwatch.finalize()
     const resuelto = durationMs <= challenge.thresholdMs
 
-    addSession({
+    const saved = addSession({
       challengeId,
       modality,
       ageAtSession: parsedAge,
       durationMs,
       resuelto,
       timestamp: new Date().toISOString(),
+      priorRoboticsExperience,
+      blockConfusion: false,
     })
+    setSavedSessionId(saved.id)
     setSavedMessage(
       `Sesión guardada: ${resuelto ? "resuelto" : "no resuelto"}.`
     )
@@ -67,6 +77,8 @@ export function CaptureScreen() {
     setModality(null)
     setAgeInput("")
     setAgeError(undefined)
+    setPriorRoboticsExperience(false)
+    setSavedSessionId(null)
     stopwatch.reset()
     setDisplayAttemptNumber(nextAttemptNumber)
   }
@@ -108,6 +120,13 @@ export function CaptureScreen() {
             error={ageError}
             disabled={isLocked}
           />
+          <ObservationCheckbox
+            id="prior-robotics-experience"
+            label="Experiencia previa en robótica"
+            checked={priorRoboticsExperience}
+            onCheckedChange={setPriorRoboticsExperience}
+            disabled={isLocked}
+          />
 
           <StopwatchControls
             stopwatch={stopwatch}
@@ -117,6 +136,17 @@ export function CaptureScreen() {
             onReset={handleReset}
             thresholdMs={challenge?.thresholdMs ?? null}
           />
+
+          {savedSessionId !== null && (
+            <ObservationCheckbox
+              id="block-confusion"
+              label="Confusión en el uso de bloques"
+              checked={blockConfusion}
+              onCheckedChange={(checked) =>
+                updateSession(savedSessionId, { blockConfusion: checked })
+              }
+            />
+          )}
 
           {savedMessage && (
             <p className="text-sm text-muted-foreground">{savedMessage}</p>

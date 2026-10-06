@@ -24,6 +24,8 @@ import { EditSessionDialog } from "@/components/EditSessionDialog"
 import { challenges } from "@/data/challenges"
 import type { SessionRecord } from "@/types/session"
 
+const PAGE_SIZE = 20
+
 interface ReportsTableProps {
   sessions: SessionRecord[]
   onUpdateSession: (id: string, patch: Partial<SessionRecord>) => void
@@ -47,6 +49,15 @@ export function ReportsTable({
   )
   const [deletingSession, setDeletingSession] = useState<SessionRecord | null>(
     null
+  )
+  const [page, setPage] = useState(1)
+
+  // Clamp so deleting the last row of the last page never leaves an empty page.
+  const totalPages = Math.max(1, Math.ceil(sessions.length / PAGE_SIZE))
+  const currentPage = Math.min(page, totalPages)
+  const pageSessions = sessions.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
   )
 
   const handleConfirmDelete = () => {
@@ -106,7 +117,7 @@ export function ReportsTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sessions.map((session) => (
+          {pageSessions.map((session) => (
             <TableRow key={session.id}>
               <TableCell>{session.attemptNumber}</TableCell>
               <TableCell>{challengeName(session.challengeId)}</TableCell>
@@ -147,7 +158,7 @@ export function ReportsTable({
       </Table>
 
       <div className="flex flex-col gap-3 md:hidden">
-        {sessions.map((session) => (
+        {pageSessions.map((session) => (
           <Card key={session.id}>
             <CardContent className="flex flex-col gap-1 p-4">
               <div className="flex items-center justify-between">
@@ -200,6 +211,32 @@ export function ReportsTable({
           </Card>
         ))}
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={currentPage === 1}
+            onClick={() => setPage(currentPage - 1)}
+          >
+            Anterior
+          </Button>
+          <span className="text-sm text-muted-foreground">
+            Página {currentPage} de {totalPages}
+          </span>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={currentPage === totalPages}
+            onClick={() => setPage(currentPage + 1)}
+          >
+            Siguiente
+          </Button>
+        </div>
+      )}
 
       {editingSession && (
         <EditSessionDialog

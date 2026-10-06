@@ -4,7 +4,12 @@ import { useSessions } from "@/hooks/useSessions"
 import { Card, CardContent } from "@/components/ui/card"
 
 export function ReportsScreen() {
-  const { sessions, updateSession, deleteSession } = useSessions()
+  const { sessions: storedSessions, updateSession, deleteSession } =
+    useSessions()
+  // Newest attempts first, both on screen and in the CSV export.
+  const sessions = storedSessions.toSorted(
+    (a, b) => b.attemptNumber - a.attemptNumber
+  )
 
   return (
     <div className="mx-auto max-w-3xl p-6">
